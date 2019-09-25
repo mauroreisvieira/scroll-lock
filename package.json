@@ -1,7 +1,7 @@
 {
   "name": "scroll-lock",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lock body scroll without breaking scrolling of a target element.",
   "main": "main.js",
   "scripts": {
     "dev": "rollup -c -w",
@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/mauroreisvieira/scroll-lock/issues"
   },
-  "homepage": "https://github.com/mauroreisvieira/scroll-lock#readme",
+  "homepage": "https://github.com/mauroreisvieira/scroll-lock#README",
   "devDependencies": {
     "cssnano": "^4.1.10",
     "eslint": "^6.3.0",

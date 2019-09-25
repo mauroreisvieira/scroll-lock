@@ -1,5 +1,7 @@
 # Scroll Lock
 
+Lock body scroll without breaking scrolling of a target element (only for touch devices).
+
 ## Project Setup
 
 ``` bash
@@ -34,21 +36,23 @@ yarn run lint
 import { Scrollock } from "./scrollock.js";
 
 const targetElement = document.querySelector('#someElement');
-const btnElement = document.querySelector('#someBtn');
 const lock = new Scrollock({
     element: targetElement
 });
 
 let isOpen = false;
 
-btnElement.addEventListener('click', function() {
+document.querySelector('.btn').addEventListener('click', function() {
     if (!isOpen) {
-        body.classList.add('is-lock');
         lock.disableBodyScroll();
     } else {
-        body.classList.remove('is-lock');
         lock.enableBodyScroll();
     }
     isOpen = !isOpen;
 });
 ```
+
+## Support Tested
+
+- iOS (Safari 13 & Chrome 76)
+- Android (Brave 1.3.2 & Chrome 77)
