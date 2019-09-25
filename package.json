@@ -1,0 +1,35 @@
+{
+  "name": "scroll-lock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c --environment BUILD:production",
+    "lint": "eslint src/**/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mauroreisvieira/scroll-lock.git"
+  },
+  "author": "Mauro Reis Vieira <mauroreisvieira@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mauroreisvieira/scroll-lock/issues"
+  },
+  "homepage": "https://github.com/mauroreisvieira/scroll-lock#readme",
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "eslint": "^6.3.0",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.18.2",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel-minify": "^9.0.0",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-css-porter": "^1.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-scss": "^1.0.2",
+    "rollup-plugin-serve": "^1.0.1"
+  }
+}
