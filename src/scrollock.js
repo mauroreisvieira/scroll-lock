@@ -1,13 +1,15 @@
 export class Scrollock {
     constructor(options) {
-        const { element, clientY, passive } = Object.assign({
+        const { element, initialClientY, passive } = Object.assign({
             element: undefined,
             onlyTouch: true
         }, options);
 
         this.el = element;
-        this.clientY = 0;
+        this.initialClientY = 0;
         this.passive = false;
+
+        this.isBodyOverflow = false;
 
         this.preventBodyScroll = this.preventBodyScroll.bind(this);
         this.captureClientY = this.captureClientY.bind(this);
@@ -15,15 +17,15 @@ export class Scrollock {
     }
 
     enableBodyScroll() {
-        window.removeEventListener('touchmove', this.preventBodyScroll, { passive: this.passive });
+        this.setOverflowHidden(false);
         this.el.removeEventListener('touchstart', this.captureClientY);
         this.el.removeEventListener('touchmove', this.preventOverscroll);
     }
 
     disableBodyScroll() {
+        this.setOverflowHidden(true);
         this.el.addEventListener('touchstart', this.captureClientY);
         this.el.addEventListener('touchmove', this.preventOverscroll);
-        window.addEventListener('touchmove', this.preventBodyScroll, { passive: this.passive });
     }
 
     /**
@@ -31,21 +33,21 @@ export class Scrollock {
      *
      * @param  evt
      */
-    preventBodyScroll(evt) {
-        if (this.el === false || !evt.target.closest(this.selector)) {
-            evt.preventDefault();
-        }
-    };
+     preventBodyScroll(evt) {
+         if (this.el === false || !evt.target.closest(this.selector)) {
+             evt.preventDefault();
+         }
+     };
 
     /**
-     * Cache the clientY co-ordinates for comparison.
+     * Cache the initialClientY co-ordinates for comparison.
      *
      * @param  evt
      */
-    captureClientY(evt) {
+     captureClientY(evt) {
         // only respond to a single touch
         if (evt.targetTouches.length === 1) {
-            this.clientY = evt.targetTouches[0].clientY;
+            this.initialClientY = evt.targetTouches[0].initialClientY;
         }
     };
 
@@ -55,18 +57,36 @@ export class Scrollock {
      *
      * @param  evt
      */
-    preventOverscroll(evt) {
-        if (evt.targetTouches.length !== 1) {
-            return;
-        }
+     preventOverscroll(evt) {
+         if (evt.targetTouches.length !== 1) {
+             return;
+         }
 
-        var clientY = evt.targetTouches[0].clientY - this.clientY;
-        if (this.el.scrollTop === 0 && clientY > 0) {
-            evt.preventDefault();
-        }
+         var initialClientY = evt.targetTouches[0].initialClientY - this.initialClientY;
+         console.log(initialClientY);
+         if (this.el.scrollTop === 0 && initialClientY > 0) {
+             evt.preventDefault();
+         }
 
-        if ((this.el.scrollHeight - this.el.scrollTop <= this.el.clientHeight) && clientY < 0) {
-            evt.preventDefault();
-        }
-    };
-}
+         if ((this.el.scrollHeight - this.el.scrollTop <= this.el.clientHeight) && initialClientY < 0) {
+             evt.preventDefault();
+         }
+     };
+
+     setOverflowHidden() {
+         console.log(this.isBodyOverflow);
+         if (!this.isBodyOverflow) {
+             const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+
+             if (scrollBarGap > 0) {
+                 document.body.style.setProperty('padding-right', `${scrollBarGap}px`);
+             }
+
+             document.body.style.setProperty('overflow', 'hidden');
+         } else {
+             document.body.style.removeProperty('overflow');
+         }
+
+         this.isBodyOverflow = !this.isBodyOverflow;
+     }
+ }

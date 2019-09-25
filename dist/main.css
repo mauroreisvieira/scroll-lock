@@ -42,7 +42,6 @@ p {
   max-width: 380px;
   max-height: 580px;
   height: calc(100% - 80px);
-  padding: 24px;
   background-color: #fff;
   position: relative;
   display: flex;
@@ -60,9 +59,10 @@ p {
 }
 
 .chat__body {
-  height: 100%;
   display: flex;
   flex: 1;
+  height: 100%;
+  padding: 24px;
   overflow: auto;
   flex-direction: column;
 }
@@ -88,11 +88,7 @@ p {
 }
 
 .is-open .chat__button {
-opacity: .5;
-}
-
-.is-lock {
-  overflow: hidden;
+  background-color: #777;
 }
 
 .message {
@@ -101,7 +97,7 @@ opacity: .5;
   list-style: none;
 }
 
-.message .message__item {
+.message__item {
   box-sizing: border-box;
   display: flex;
   min-height: 48px;
@@ -109,11 +105,11 @@ opacity: .5;
   align-items: flex-end;
 }
 
-.message .message__item--reverse {
+.message__item--reverse {
   flex-direction: row-reverse;
 }
 
-.message .message__item .message__info {
+.message__info {
   justify-content: flex-start;
   display: flex;
   flex-direction: column;
@@ -122,14 +118,18 @@ opacity: .5;
   text-align: center;
 }
 
-.message .message__item .message__info .message__thumb {
+.message__thumb {
   width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
 }
 
-.message .message__item .message__content {
+.message__text {
+  margin: 0;
+}
+
+.message__content {
   flex: 1;
   padding: 14px;
   border-radius: 6px;
@@ -137,7 +137,7 @@ opacity: .5;
   background-color: #f4f2f2;
 }
 
-.message .message__item--reverse .message__content {
+.message__item--reverse .message__content {
   background-color: #625efc;
   color: #fff;
 }

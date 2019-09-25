@@ -1,14 +1,112 @@
-class Scrollock{constructor(a){const{element:b,clientY:c,passive:d}=Object.assign({element:void 0,onlyTouch:!0},a);this.el=b,this.clientY=0,this.passive=!1,this.preventBodyScroll=this.preventBodyScroll.bind(this),this.captureClientY=this.captureClientY.bind(this),this.preventOverscroll=this.preventOverscroll.bind(this)}enableBodyScroll(){window.removeEventListener("touchmove",this.preventBodyScroll,{passive:this.passive}),this.el.removeEventListener("touchstart",this.captureClientY),this.el.removeEventListener("touchmove",this.preventOverscroll)}disableBodyScroll(){this.el.addEventListener("touchstart",this.captureClientY),this.el.addEventListener("touchmove",this.preventOverscroll),window.addEventListener("touchmove",this.preventBodyScroll,{passive:this.passive})}/**
+class Scrollock {
+    constructor(options) {
+        const { element, initialClientY, passive } = Object.assign({
+            element: undefined,
+            onlyTouch: true
+        }, options);
+
+        this.el = element;
+        this.initialClientY = 0;
+        this.passive = false;
+
+        this.isBodyOverflow = false;
+
+        this.preventBodyScroll = this.preventBodyScroll.bind(this);
+        this.captureClientY = this.captureClientY.bind(this);
+        this.preventOverscroll = this.preventOverscroll.bind(this);
+    }
+
+    enableBodyScroll() {
+        this.setOverflowHidden(false);
+        this.el.removeEventListener('touchstart', this.captureClientY);
+        this.el.removeEventListener('touchmove', this.preventOverscroll);
+    }
+
+    disableBodyScroll() {
+        this.setOverflowHidden(true);
+        this.el.addEventListener('touchstart', this.captureClientY);
+        this.el.addEventListener('touchmove', this.preventOverscroll);
+    }
+
+    /**
      * Prevent default unless within selector.
      *
      * @param  evt
-     */preventBodyScroll(a){!1!==this.el&&a.target.closest(this.selector)||a.preventDefault()}/**
-     * Cache the clientY co-ordinates for comparison.
+     */
+     preventBodyScroll(evt) {
+         if (this.el === false || !evt.target.closest(this.selector)) {
+             evt.preventDefault();
+         }
+     };
+
+    /**
+     * Cache the initialClientY co-ordinates for comparison.
      *
      * @param  evt
-     */captureClientY(a){1===a.targetTouches.length&&(this.clientY=a.targetTouches[0].clientY)}/**
+     */
+     captureClientY(evt) {
+        // only respond to a single touch
+        if (evt.targetTouches.length === 1) {
+            this.initialClientY = evt.targetTouches[0].initialClientY;
+        }
+    };
+
+    /**
      * Detect whether the element is at the top or the bottom of their scroll
      * and prevent the user from scrolling beyond.
      *
      * @param  evt
-     */preventOverscroll(a){if(1===a.targetTouches.length){var b=a.targetTouches[0].clientY-this.clientY;0===this.el.scrollTop&&0<b&&a.preventDefault(),this.el.scrollHeight-this.el.scrollTop<=this.el.clientHeight&&0>b&&a.preventDefault()}}}const body=document.querySelector("body"),chat=document.querySelector(".chat"),chatWrapper=document.querySelector(".chat__wrapper"),chatBtn=document.querySelector(".chat__button"),lock=new Scrollock({element:chat});let isOpen=!1;chatBtn.addEventListener("click",function(){isOpen?(body.classList.remove("is-lock"),chat.classList.remove("is-open"),chatWrapper.classList.remove("is-open"),lock.enableBodyScroll()):(body.classList.add("is-lock"),chat.classList.add("is-open"),lock.disableBodyScroll()),isOpen=!isOpen});
+     */
+     preventOverscroll(evt) {
+         if (evt.targetTouches.length !== 1) {
+             return;
+         }
+
+         var initialClientY = evt.targetTouches[0].initialClientY - this.initialClientY;
+         console.log(initialClientY);
+         if (this.el.scrollTop === 0 && initialClientY > 0) {
+             evt.preventDefault();
+         }
+
+         if ((this.el.scrollHeight - this.el.scrollTop <= this.el.clientHeight) && initialClientY < 0) {
+             evt.preventDefault();
+         }
+     };
+
+     setOverflowHidden() {
+         console.log(this.isBodyOverflow);
+         if (!this.isBodyOverflow) {
+             const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
+
+             if (scrollBarGap > 0) {
+                 document.body.style.setProperty('padding-right', `${scrollBarGap}px`);
+             }
+
+             document.body.style.setProperty('overflow', 'hidden');
+         } else {
+             document.body.style.removeProperty('overflow');
+         }
+
+         this.isBodyOverflow = !this.isBodyOverflow;
+     }
+ }
+
+const chat = document.querySelector('.chat');
+const chatWrapper = document.querySelector('.chat__wrapper');
+const chatBtn = document.querySelector('.chat__button');
+const lock = new Scrollock({
+    element: chatWrapper
+});
+
+let isOpen = false;
+chatBtn.addEventListener('click', function() {
+    if(!isOpen) {
+        chat.classList.add('is-open');
+        lock.disableBodyScroll();
+    } else {
+        chat.classList.remove('is-open');
+        chatWrapper.classList.remove('is-open');
+        lock.enableBodyScroll();
+    }
+    isOpen = !isOpen;
+});
