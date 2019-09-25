@@ -5,7 +5,7 @@ const chat = document.querySelector('.chat');
 const chatWrapper = document.querySelector('.chat__wrapper');
 const chatBtn = document.querySelector('.chat__button');
 const lock = new Scrollock({
-    element: chatWrapper
+    element: chat
 });
 
 let isOpen = false;

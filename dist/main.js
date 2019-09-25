@@ -5,6 +5,10 @@ class Scrollock {
             onlyTouch: true
         }, options);
 
+        if (!element) {
+            throw new Error('You need to specify a selector!');
+        }
+
         this.el = element;
         this.initialClientY = 0;
         this.passive = false;
@@ -62,8 +66,7 @@ class Scrollock {
              return;
          }
 
-         var initialClientY = evt.targetTouches[0].initialClientY - this.initialClientY;
-         console.log(initialClientY);
+         const initialClientY = evt.targetTouches[0].initialClientY - this.initialClientY;
          if (this.el.scrollTop === 0 && initialClientY > 0) {
              evt.preventDefault();
          }
@@ -74,14 +77,7 @@ class Scrollock {
      };
 
      setOverflowHidden() {
-         console.log(this.isBodyOverflow);
          if (!this.isBodyOverflow) {
-             const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
-
-             if (scrollBarGap > 0) {
-                 document.body.style.setProperty('padding-right', `${scrollBarGap}px`);
-             }
-
              document.body.style.setProperty('overflow', 'hidden');
          } else {
              document.body.style.removeProperty('overflow');
@@ -95,7 +91,7 @@ const chat = document.querySelector('.chat');
 const chatWrapper = document.querySelector('.chat__wrapper');
 const chatBtn = document.querySelector('.chat__button');
 const lock = new Scrollock({
-    element: chatWrapper
+    element: chat
 });
 
 let isOpen = false;
