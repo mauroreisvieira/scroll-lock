@@ -34,6 +34,9 @@ export class Scrollock {
         this.el.addEventListener("touchmove", this.onTouchMove, false);
     }
 
+    /**
+     *   Apply passive event listening if it's supported
+     */
     applyPassive() {
         if (this.supportsPassive !== undefined) {
             return this.supportsPassive ? { passive: true } : false;
