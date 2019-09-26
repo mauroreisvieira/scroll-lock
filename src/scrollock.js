@@ -3,7 +3,6 @@ export class Scrollock {
         const { element } = Object.assign(
             {
                 element: undefined,
-                onlyTouch: true,
             },
             options
         );
