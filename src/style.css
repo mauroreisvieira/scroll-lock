@@ -39,41 +39,52 @@ p {
 }
 
 .chat__wrapper {
-  max-width: 380px;
-  max-height: 580px;
-  height: calc(100% - 80px);
-  background-color: #fff;
   position: relative;
+  right: 0;
+  bottom: 80px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  bottom: 80px;
-  right: 0;
+  max-width: 380px;
+  max-height: 620px;
+  height: calc(100% - 80px);
   border-radius: 8px;
+  background-color: #fff;
+  will-change: transform;
   box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
-  overflow: auto;
   transform: translate(-20px, 50px) scale(0, 0);
   transition: transform .3s ease;
   transform-origin: bottom right;
   pointer-events: all;
 }
 
-.chat__body {
+.chat__header {
   display: flex;
-  flex: 1;
-  height: 100%;
-  padding: 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #f4f2f2;
+}
+
+.chat__title {
+  margin: 0;
+  font-weight: 400;
+}
+
+.chat__body {
+  padding: 8px 16px;
   overflow: auto;
-  flex-direction: column;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch
 }
 
 .chat__button {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60px;
   height: 60px;
-  position: absolute;
   right: 24px;
   bottom: 24px;
   border-radius: 100%;
@@ -81,6 +92,8 @@ p {
   background-color: #625efc;
   color: #fff;
   cursor: pointer;
+  user-select: none;
+  -webkit-appearance: none;
 }
 
 .is-open .chat__wrapper {
@@ -98,11 +111,11 @@ p {
 }
 
 .message__item {
-  box-sizing: border-box;
   display: flex;
   min-height: 48px;
   flex-direction: row;
   align-items: flex-end;
+  margin-bottom: 16px;
 }
 
 .message__item--reverse {
@@ -110,9 +123,9 @@ p {
 }
 
 .message__info {
-  justify-content: flex-start;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   width: 50px;
   text-align: center;
@@ -131,13 +144,13 @@ p {
 
 .message__content {
   flex: 1;
-  padding: 14px;
-  border-radius: 6px;
-  margin: 16px 0;
+  padding: 12px;
+  border-radius: 16px 16px 16px 0;
   background-color: #f4f2f2;
 }
 
 .message__item--reverse .message__content {
+  border-radius: 16px 16px 0 16px;
   background-color: #625efc;
   color: #fff;
 }
