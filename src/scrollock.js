@@ -13,30 +13,49 @@ export class Scrollock {
 
         this.el = element;
         this.initialClientY = 0;
-        this.passive = false;
 
         this.isBodyOverflow = false;
+        this.supportsPassive = undefined;
 
         this.preventBodyScroll = this.preventBodyScroll.bind(this);
-        this.captureClientY = this.captureClientY.bind(this);
-        this.preventOverscroll = this.preventOverscroll.bind(this);
+        this.onTouchStart = this.onTouchStart.bind(this);
+        this.onTouchMove = this.onTouchMove.bind(this);
     }
 
     enableBodyScroll() {
         this.setOverflowHidden();
-        this.el.removeEventListener("touchstart", this.captureClientY);
-        this.el.removeEventListener("touchmove", this.preventOverscroll);
+        this.el.removeEventListener("touchstart", this.onTouchStart, this.applyPassive());
+        this.el.removeEventListener("touchmove", this.onTouchMove, this.applyPassive());
     }
 
     disableBodyScroll() {
         this.setOverflowHidden();
-        this.el.addEventListener("touchstart", this.captureClientY);
-        this.el.addEventListener("touchmove", this.preventOverscroll);
+        this.el.addEventListener("touchstart", this.onTouchStart, false);
+        this.el.addEventListener("touchmove", this.onTouchMove, false);
+    }
+
+    applyPassive() {
+        if (this.supportsPassive !== undefined) {
+            return this.supportsPassive ? { passive: true } : false;
+        }
+
+        let isSupported = false;
+        try {
+            document.addEventListener("test", null, {
+                get: function() {
+                    isSupported = true;
+                },
+            });
+        } catch (e) {
+            console.warn(e);
+        }
+
+        this.supportsPassive = isSupported;
+        return this.applyPassive();
     }
 
     /**
      * Prevent default unless within selector.
-     *
      * @param  evt
      */
     preventBodyScroll(evt) {
@@ -47,10 +66,9 @@ export class Scrollock {
 
     /**
      * Cache the initialClientY co-ordinates for comparison.
-     *
      * @param  evt
      */
-    captureClientY(evt) {
+    onTouchStart(evt) {
         // only respond to a single touch
         if (evt.targetTouches.length === 1) {
             this.initialClientY = evt.targetTouches[0].initialClientY;
@@ -60,10 +78,9 @@ export class Scrollock {
     /**
      * Detect whether the element is at the top or the bottom of their scroll
      * and prevent the user from scrolling beyond.
-     *
      * @param  evt
      */
-    preventOverscroll(evt) {
+    onTouchMove(evt) {
         if (evt.targetTouches.length !== 1) {
             return;
         }
