@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c --environment BUILD:production",
-    "lint": "eslint src/**/**/*.js"
+    "lint": "eslint src/*.js"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 export class Scrollock {
     constructor(options) {
-        const { element, initialClientY, passive } = Object.assign(
+        const { element } = Object.assign(
             {
                 element: undefined,
                 onlyTouch: true,
@@ -24,13 +24,13 @@ export class Scrollock {
     }
 
     enableBodyScroll() {
-        this.setOverflowHidden(false);
+        this.setOverflowHidden();
         this.el.removeEventListener("touchstart", this.captureClientY);
         this.el.removeEventListener("touchmove", this.preventOverscroll);
     }
 
     disableBodyScroll() {
-        this.setOverflowHidden(true);
+        this.setOverflowHidden();
         this.el.addEventListener("touchstart", this.captureClientY);
         this.el.addEventListener("touchmove", this.preventOverscroll);
     }
