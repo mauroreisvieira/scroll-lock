@@ -1,12 +1,15 @@
 export class Scrollock {
     constructor(options) {
-        const { element, initialClientY, passive } = Object.assign({
-            element: undefined,
-            onlyTouch: true
-        }, options);
+        const { element, initialClientY, passive } = Object.assign(
+            {
+                element: undefined,
+                onlyTouch: true,
+            },
+            options
+        );
 
         if (!element) {
-            throw new Error('You need to specify a selector!');
+            throw new Error("You need to specify a selector!");
         }
 
         this.el = element;
@@ -22,14 +25,14 @@ export class Scrollock {
 
     enableBodyScroll() {
         this.setOverflowHidden(false);
-        this.el.removeEventListener('touchstart', this.captureClientY);
-        this.el.removeEventListener('touchmove', this.preventOverscroll);
+        this.el.removeEventListener("touchstart", this.captureClientY);
+        this.el.removeEventListener("touchmove", this.preventOverscroll);
     }
 
     disableBodyScroll() {
         this.setOverflowHidden(true);
-        this.el.addEventListener('touchstart', this.captureClientY);
-        this.el.addEventListener('touchmove', this.preventOverscroll);
+        this.el.addEventListener("touchstart", this.captureClientY);
+        this.el.addEventListener("touchmove", this.preventOverscroll);
     }
 
     /**
@@ -37,23 +40,23 @@ export class Scrollock {
      *
      * @param  evt
      */
-     preventBodyScroll(evt) {
-         if (this.el === false || !evt.target.closest(this.selector)) {
-             evt.preventDefault();
-         }
-     };
+    preventBodyScroll(evt) {
+        if (this.el === false || !evt.target.closest(this.selector)) {
+            evt.preventDefault();
+        }
+    }
 
     /**
      * Cache the initialClientY co-ordinates for comparison.
      *
      * @param  evt
      */
-     captureClientY(evt) {
+    captureClientY(evt) {
         // only respond to a single touch
         if (evt.targetTouches.length === 1) {
             this.initialClientY = evt.targetTouches[0].initialClientY;
         }
-    };
+    }
 
     /**
      * Detect whether the element is at the top or the bottom of their scroll
@@ -61,28 +64,34 @@ export class Scrollock {
      *
      * @param  evt
      */
-     preventOverscroll(evt) {
-         if (evt.targetTouches.length !== 1) {
-             return;
-         }
+    preventOverscroll(evt) {
+        if (evt.targetTouches.length !== 1) {
+            return;
+        }
 
-         const initialClientY = evt.targetTouches[0].initialClientY - this.initialClientY;
-         if (this.el.scrollTop === 0 && initialClientY > 0) {
-             evt.preventDefault();
-         }
+        const initialClientY = evt.targetTouches[0].initialClientY - this.initialClientY;
+        if (this.el.scrollTop === 0 && initialClientY > 0) {
+            evt.preventDefault();
+        }
 
-         if ((this.el.scrollHeight - this.el.scrollTop <= this.el.clientHeight) && initialClientY < 0) {
-             evt.preventDefault();
-         }
-     };
+        if (this.el.scrollHeight - this.el.scrollTop <= this.el.clientHeight && initialClientY < 0) {
+            evt.preventDefault();
+        }
+    }
 
-     setOverflowHidden() {
-         if (!this.isBodyOverflow) {
-             document.body.style.setProperty('overflow', 'hidden');
-         } else {
-             document.body.style.removeProperty('overflow');
-         }
+    setOverflowHidden() {
+        if (!this.isBodyOverflow) {
+            const scrollBarGap = window.innerWidth - document.documentElement.clientWidth;
 
-         this.isBodyOverflow = !this.isBodyOverflow;
-     }
- }
+            if (scrollBarGap > 0) {
+                document.body.style.setProperty("padding-right", `${scrollBarGap}px`);
+            }
+
+            document.body.style.setProperty("overflow", "hidden");
+        } else {
+            document.body.style.removeProperty("overflow");
+        }
+
+        this.isBodyOverflow = !this.isBodyOverflow;
+    }
+}
