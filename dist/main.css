@@ -96,6 +96,7 @@ p {
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
     outline: none;
+    border: 0;
 }
 
 .chat__button:focus {
